@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!--
+PROVIDE:
+- Name of the country (country param)
+
+samples:
+fts.html?country=NGA
+
+ISSUE: some indicators like "People in Food Crisis & Emergency"
+
+Using Styles from http://wrapbootstrap.com/preview/WB02R1485
+-->
+<link rel="stylesheet" type="text/css" href="https://agileui.com/demo/monarch/assets/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://agileui.com/demo/monarch/assets/elements/tile-box.css">
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="https://momentjs.com/downloads/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+
+<script type="text/javascript">
+
+	var getUrlParameter = function getUrlParameter(sParam) {
+		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
+
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
+
+			if (sParameterName[0] === sParam) {
+				return sParameterName[1] === undefined ? true : sParameterName[1];
+			}
+		}
+	};
+
+  	// We will fill in our code here
+   $(document).ready(function() {
+
+		var country_ISO = getUrlParameter('country');
+
+		var funding_total;
+		var source;
+		var year;
+		var name;
+		var type;
+		var received;
+		var required;
+		var percentage;
+
+
+		$.getJSON('https://raw.githubusercontent.com/reliefweb/crisis-app-data/v2/edition/world/countries/' + country_ISO + '/fts.json', function(data) {
+
+			$('body').append('<a href="#" title="' + data.appeals[0].name +
+			'" class="tile-box btn btn-default">' +
+			'<div class="tile-header">' +
+			data.appeals[0].name + ' - ' + data.appeals[0].type +
+			'<div class="float-right"><i class="glyph-icon icon-caret-up"></i>' +
+			'Total funding: ' + numeral(data.highlights.funding_total).format('0,0')+ '<br/> ' +
+			'Received: ' + numeral(data.appeals[0].received).format('0,0')+ '<br/> ' +
+			'Source: ' + data.appeals[0].source + '<br/>' +
+			'</div>' +
+			'<div class="tile-content-wrapper">' +
+			'<i class="glyph-icon icon-tachometer"></i>' +
+			'<div class="tile-content">' +
+			'Required: ' + numeral(data.appeals[0].required ).format('0,0')+ '<br/> ' +
+			'% funded: ' + numeral(data.appeals[0].percentage/100 ).format('0%')+ '<br/> '
+			+ '</div>');
+
+		});
+
+
+
+	});
+	</script>
+
+</head>
+<body>
+
+
+</body>
+</html>
